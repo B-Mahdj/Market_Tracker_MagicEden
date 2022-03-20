@@ -1,7 +1,7 @@
 //Main entrypoint of our bot
 //Call environment variables inside the .env file
 require('dotenv').config();
-MILLISECONDES_BEFORE_REFRESH=1000;
+MILLISECONDES_BEFORE_REFRESH=5000;
 
 //print dans la console la variable nommée dans .env 
 //console.log(process.env.DISCORD_BOT_TOKEN);
@@ -19,45 +19,27 @@ client.on('ready', async () => {
   console.log('Bot is connected...');
 
   setInterval(async function(){
-    // Call the magicEden API to get details on the angrybearclub collection (var for the name)
-    var request = require('request');
-    var options = {
-      'method': 'GET',
-      'url': 'http://api-mainnet.magiceden.dev/v2/collections/astrals/stats',
-      'headers': {
-      }
-    };
-    request(options, function (error, response, body) {
-      if(error) console.log('error', err);
-      var json = JSON.parse(body);
-      console.log(json);
-      //Get Floor price of the collection
-    });
+    getWalletActivities();
   }, MILLISECONDES_BEFORE_REFRESH)
 
 });
 
-function floatParse2(x) {
-  return Number.parseFloat(x).toFixed(2);
-}
-
 function getWalletActivities(){
-    setInterval(async function(){
         // Call the magicEden API to get details on the angrybearclub collection (var for the name)
         var request = require('request');
         var options = {
           'method': 'GET',
-          'url': 'api-mainnet.magiceden.dev/v2/wallets/:wallet_address/activities?offset=0&limit=100',
+          'url': 'https://api-mainnet.magiceden.dev/v2/wallets/DYFsKBpkL2RRUPfKow6yzyA3smSHN37UKXSqEbXqLd2y/activities?offset=0&limit=100',
           'headers': {
           }
         };
         request(options, function (error, response, body) {
-          if(error) console.log('error', err);
+          if(error) console.log('error', error);
           var json = JSON.parse(body);
           console.log(json);
+          return json;
           //Get Floor price of the collection
         });
-      }, MILLISECONDES_BEFORE_REFRESH)
 }
 
 //Log our bot in using the variable 
