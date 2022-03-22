@@ -38,18 +38,17 @@ function getWalletActivities(){
           if(error) console.log('error', error);
           walletActivities = JSON.parse(body);
           console.log(walletActivities);
-          console.log(walletActivities[0].signature);
           if(last_transaction_id == null){
             last_transaction_id = walletActivities[0].signature;
             console.log("Last transaction received : ");
             console.log(walletActivities[0]);
           }
-          if(!walletActivities[0].signature == last_transaction_id){
+          if(walletActivities[0].signature !== last_transaction_id){
               console.log("The last transaction fetched is not equal to the last in database");
               let fin = false;
               var id = 1;
               while(!fin){ 
-                if(walletActivities[id].signature != last_transaction_id){
+                if(walletActivities[id].signature !== last_transaction_id){
                   id++;
                 }
                 else{
@@ -61,8 +60,7 @@ function getWalletActivities(){
                 console.log(walletActivities[i]);
                 //Ajout le processus d'écriture du message
               }
-
-              }
+            }
           }
         );
 }
