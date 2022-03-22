@@ -9,8 +9,9 @@ MILLISECONDES_BEFORE_REFRESH=5000;
 //Import the Client class from the library 
 const Discord = require('discord.js');
 const { cp } = require('fs');
-
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS] });
+var walletActivities;
+var last_transaction_id;
 
 client.on('ready', async () => {
   const GUILD_ID = client.guilds.cache.map(guild => guild.id);
@@ -35,11 +36,35 @@ function getWalletActivities(){
         };
         request(options, function (error, response, body) {
           if(error) console.log('error', error);
-          var json = JSON.parse(body);
-          console.log(json);
-          return json;
-          //Get Floor price of the collection
-        });
+          walletActivities = JSON.parse(body);
+          console.log(walletActivities);
+          console.log(walletActivities[0].signature);
+          if(last_transaction_id == null){
+            last_transaction_id = walletActivities[0].signature;
+            console.log("Last transaction received : ");
+            console.log(walletActivities[0]);
+          }
+          if(!walletActivities[0].signature == last_transaction_id){
+              console.log("The last transaction fetched is not equal to the last in database");
+              let fin = false;
+              var id = 1;
+              while(!fin){ 
+                if(walletActivities[id].signature != last_transaction_id){
+                  id++;
+                }
+                else{
+                  fin = true;
+                }
+              }
+              for (let i = 1; i <= id; i++) {
+                console.log("Transaction fetched : ");
+                console.log(walletActivities[i]);
+                //Ajout le processus d'écriture du message
+              }
+
+              }
+          }
+        );
 }
 
 //Log our bot in using the variable 
